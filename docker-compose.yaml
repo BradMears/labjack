@@ -1,0 +1,23 @@
+version: "3"
+
+# You'll probably have to do xhost +"local:docker@" on the host first
+services:
+  labjack:
+    user: "${UID}:${GID}" 
+    image: labjack:latest
+    hostname: labjack
+    build: .
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - USER=${USER}
+    volumes:
+      - ${HOME}:${HOME}
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /run/udev:/run/udev:ro
+      #- /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/bus/usb:/dev/bus/usb
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+    network_mode: host
+
