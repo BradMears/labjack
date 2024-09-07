@@ -4,7 +4,7 @@ version: "3"
 services:
   labjack:
     user: "${UID}:${GID}" 
-    image: labjack:latest
+    image: bradmears/labjack:latest
     hostname: labjack
     build: .
     privileged: true

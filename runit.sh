@@ -3,4 +3,5 @@
 
 export UID
 export GID=`id -g`
-docker compose run -i --rm --name labjack labjack
+docker compose run --rm --name labjack labjack
+#docker run -i --rm --name labjack bradmears/labjack
