@@ -1,4 +1,5 @@
 *zip
+*.tar.gz
 lj_error.txt
 setup.sh
 INSTALL.md
