@@ -1,8 +1,5 @@
 FROM ubuntu:22.04
 
-ENV TZ=US \
-    DEBIAN_FRONTEND=noninteractive
-
 # Dependencies required for LabJack
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
