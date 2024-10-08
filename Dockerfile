@@ -20,9 +20,9 @@ RUN apt-get update && apt-get upgrade -y && \
 #RUN apt-get install -y udev
 
 RUN mkdir /app
-COPY examples /app
+COPY examples /app/examples
 
-# Unpack the Intel Linux distro . This line is different in the raspberry-pi branch.
+# Unpack the Intel Linux distro . These lines are different in the raspberry-pi branch.
 COPY LabJack-LJM_2024-06-10.zip /app
 WORKDIR /app
 
@@ -33,4 +33,5 @@ RUN unzip *.zip && \
     pip3 install --no-cache-dir labjack-ljm==1.21.0 && \
     rm -rf /opt/labjack_kipling
 
+WORKDIR /app/examples
 CMD ["/bin/bash"]
