@@ -7,4 +7,4 @@
 # Start the container in one window and then run this script in another. After
 # that, you should be good to go.
 
-docker exec --user=root labjack ./LabJackM.run
+docker exec -it --user=root labjack ./LabJackM.run
