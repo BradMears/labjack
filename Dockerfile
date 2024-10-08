@@ -1,23 +1,15 @@
-FROM ubuntu:22.04
+FROM bradmears/pydev:latest
 
-ENV TZ=US \
-    DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+            unzip \
+            libusb-1.0-0-dev
 
-# Dependencies required for LabJack
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y \
-    libnss3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libgbm1 \
-    libgtk-3-0 \
-    libasound2
-    
-RUN apt-get install -y unzip python3-pip libusb-1.0-0-dev udev
+# None of the Kipling dependencies are in here since Kipling isn't 
+# supported on the RPi
 
 RUN mkdir /app
-COPY list_connections.py /app
+COPY examples /app/examples
 
 # Unpack the RPi-specific distro. These two lines are why we need
 # a separate branch for raspberry-pi. The '2000' in the filename
@@ -26,13 +18,15 @@ COPY list_connections.py /app
 # ADD copies and unpacks the archive in one fell swoop
 ADD LabJackM-1.2000-openSUSE-Linux-aarch64-release.tar.gz /app
 WORKDIR /app/LabJackM-1.2000-openSUSE-Linux-aarch64 
+COPY safe_install.sh /app/LabJackM-1.2000-openSUSE-Linux-aarch64 
 
-# Trying to do the install while building the container fails when
-# restarting the device rules. Rather than hunt that down, I
-# use a script to do the install as root each time the container
-# is started. See post-build-install.sh
+# Wow. This is an ugly hack. The LabJackM.run file returns a non-zero
+# exit code when run inside a container. But if I call it from a shell
+# script, I can hide that exit code from Docker and pretend everything
+# is A-OK. This appears to work. Or at least the problems are not obvious.
+RUN pip3 install --no-cache-dir labjack-ljm==1.21.0 && \
+    ./safe_install.sh
+#    ./LabJackM.run -- --no-restart-device-rules 
 
-#RUN  ./LabJackM.run -- --no-restart-device-rules 
-RUN pip3 install --no-cache-dir labjack-ljm==1.21.0
-
+WORKDIR /app/examples
 CMD ["/bin/bash"]
